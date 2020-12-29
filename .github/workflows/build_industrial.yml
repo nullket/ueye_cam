@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
   
 env:
-  BEFORE_INIT: './Install_ueye_api.sh'
+  BEFORE_INIT: 'pwd && ls -lah && ./.github/workflows/Install_ueye_api.sh'
   
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
