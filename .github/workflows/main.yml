@@ -25,14 +25,17 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repo 
         uses: actions/checkout@v2
+        with:
+          # Relative path under $GITHUB_WORKSPACE to place the repository
+          path: 'src'
       
       - name: Create Workspace
         run: |
           ls -lh
-          #mkdir src_tmp
-          #mv `find -maxdepth 1 -not -name . -not -name src_tmp` src_tmp/
-          #mv src_tmp/ src/
-          #cd src
+          mkdir src_tmp
+          mv `find -maxdepth 1 -not -name . -not -name src_tmp` src_tmp/
+          mv src_tmp/ src/
+          cd src
           #bash -c 'source /opt/ros/$ROS_DISTRO/setup.bash; \
           #catkin_init_workspace'
           
