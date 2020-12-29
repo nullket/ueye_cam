@@ -30,12 +30,25 @@ jobs:
       #    path: 'src'
       
       - uses: actions/checkout@v2
-      - uses: ros-tooling/setup-ros@v0.1
+
+      - name: Install IDS deps
+        run: |
+          pwd
+          wget -q --show-progress --tries=2 https://de.ids-imaging.com/files/downloads/ids-software-suite/software/linux-desktop/ids-software-suite-linux-${SW_VERSION}-64.tgz -P /tmp
+          mkdir /tmp/ids-software-suite-linux
+          tar -xfz /tmp/ids-software-suite-linux-${SW_VERSION}-64.tgz -C /tmp/ids-software-suite-linux
+          sudo /tmp/ids-software-suite-linux/ueye_*_amd64.run --auto
+        env:
+          SW_VERSION: 4.94
+          
+      - name: Setup with ros-tooling/setup-ros
+        uses: ros-tooling/setup-ros@v0.1.1
         with:
           required-ros-distributions: noetic
-      - uses: ros-tooling/action-ros-ci@v0.1
+      - name: Build with ros-tooling/action-ros
+        uses: ros-tooling/action-ros-ci@v0.1.1
         with:
-          package-name: my_package
+          package-name: ueye_cam
           target-ros1-distro: noetic
           #vcs-repo-file-url: ""
       #- name: Create Workspace
