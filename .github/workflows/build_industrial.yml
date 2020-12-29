@@ -12,7 +12,10 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
+  
+env:
+  BEFORE_INIT: './Install_ueye_api.sh'
+  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -22,7 +25,6 @@ jobs:
     strategy:
       matrix:
         env:
-          - {ROS_DISTRO: melodic, ROS_REPO: testing}
           - {ROS_DISTRO: melodic, ROS_REPO: main}
     env:
       CCACHE_DIR: /github/home/.ccache # Directory for ccache (and how we enable ccache in industrial_ci)
@@ -31,20 +33,20 @@ jobs:
     steps:   
       - uses: actions/checkout@v2
         
-      - name: Install IDS deps
-        run: |
-          pwd
-          wget -q --tries=2 https://de.ids-imaging.com/files/downloads/ids-software-suite/software/linux-desktop/ids-software-suite-linux-${SW_VERSION}-64.tgz -P /tmp
-          mkdir /tmp/ids-software-suite-linux
-          tar -xzf /tmp/ids-software-suite-linux-${SW_VERSION}-64.tgz -C /tmp/ids-software-suite-linux
-          sudo /tmp/ids-software-suite-linux/ueye_*_amd64.run --auto
-          ldconfig -p | grep ueye
-        env:
-          SW_VERSION: 4.94
+      #- name: Install IDS deps
+      #  run: |
+      #    pwd
+      #    wget -q --tries=2 https://de.ids-imaging.com/files/downloads/ids-software-suite/software/linux-desktop/ids-software-suite-linux-${SW_VERSION}-64.tgz -P /tmp
+      #    mkdir /tmp/ids-software-suite-linux
+      #    tar -xzf /tmp/ids-software-suite-linux-${SW_VERSION}-64.tgz -C /tmp/ids-software-suite-linux
+      #    sudo /tmp/ids-software-suite-linux/ueye_*_amd64.run --auto
+      #    ldconfig -p | grep ueye
+      #  env:
+      #    SW_VERSION: 4.94
           
-      - name: Check if IDS is installed
-        run: |
-          ldconfig -p | grep ueye
+      #- name: Check if IDS is installed
+      #  run: |
+      #    ldconfig -p | grep ueye
           
           
       # This step will fetch/store the directory used by ccache before/after the ci run
@@ -52,6 +54,8 @@ jobs:
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ccache-${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}
+      
       # Run industrial_ci
       - uses: 'ros-industrial/industrial_ci@master'
         env: ${{ matrix.env }}
+      
