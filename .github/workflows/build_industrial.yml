@@ -6,7 +6,7 @@ on:
   push:
     branches: [ master, ci_build ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, ci_build ]
 
 # Jobs that should be run
 jobs:
